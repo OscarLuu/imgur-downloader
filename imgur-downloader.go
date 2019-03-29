@@ -73,7 +73,6 @@ func main() {
 	// Create directory
 	currentTime := time.Now()
 	dir := os.Args[2] + currentTime.Format("01-02-2006")
-
 	os.Mkdir(dir, 0700)
 	os.Chdir(dir)
 
