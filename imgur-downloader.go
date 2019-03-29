@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -10,12 +12,23 @@ import (
 )
 
 func createFile(imageURL string, image string) {
-	f, err := os.Create(image + ".jpg")
+	resp, err := http.Get(imageURL)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer resp.Body.Close()
 
-	f.Close()
+	file, err := os.Create(image + ".jpg")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	b, err := io.Copy(file, resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("File size: ", b)
 }
 
 func getVal(tag html.Token) {
